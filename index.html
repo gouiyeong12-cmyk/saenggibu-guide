@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>생기부 주제 길잡이</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;
+  --ink:#1c2a48; --muted:#56637c; --bg:#edf0f5; --paper:#ffffff; --line:#cdd5e2;
+  --blue:#2a5bd7; --blue-soft:#e4ecff; --mark:#ffe066;
+  --good:#17775f; --good-bg:#dcf3ea;
+  --warn:#8a5700; --warn-bg:#fff0c9; --warn-fill:#e8a900;
+  --none:#a8324b; --none-bg:#fde3e8; --none-fill:#d9546e;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.65 "Noto Sans KR",system-ui,sans-serif;word-break:keep-all}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+
+.top{max-width:1120px;margin:0 auto;padding:28px 16px 4px}
+.top h1{margin:0;font-size:1.6rem;line-height:1.3}
+.top p{margin:6px 0 0;color:var(--muted);max-width:60ch}
+
+.layout{max-width:1120px;margin:16px auto 48px;padding:0 16px;display:grid;grid-template-columns:minmax(300px,380px) minmax(0,1fr);gap:24px;align-items:start}
+.input{position:sticky;top:16px;display:grid;gap:12px;max-height:calc(100vh - 32px);overflow-y:auto;overscroll-behavior:contain;padding-right:6px;scrollbar-width:thin}
+@media (max-width:860px){.layout{grid-template-columns:1fr}.input{position:static;max-height:none;overflow:visible;padding-right:0}}
+
+.block{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:16px}
+.block h2{font-size:1rem;margin:0 0 10px;display:flex;gap:8px;align-items:center}
+.step{background:var(--ink);color:#fff;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:.8rem;flex:none}
+input[type=search],textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:10px 12px;font:inherit;background:#fff;color:var(--ink)}
+textarea{resize:vertical;min-height:190px;font-family:"Gowun Batang",serif;line-height:1.8}
+.hint{margin:0 0 8px;color:var(--muted);font-size:.9rem}
+
+.tracks{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.tracks button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:3px 12px;font:inherit;font-size:.875rem;cursor:pointer;color:var(--ink)}
+.tracks button[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.deptlist{list-style:none;margin:0;padding:0;max-height:280px;overflow:auto;border:1px solid var(--line);border-radius:6px}
+.deptlist li button{display:flex;justify-content:space-between;gap:8px;width:100%;text-align:left;border:0;border-bottom:1px solid #eef1f6;background:#fff;padding:9px 12px;font:inherit;cursor:pointer;color:var(--ink)}
+.deptlist li:last-child button{border-bottom:0}
+.deptlist li button[aria-pressed=true]{background:var(--blue-soft);font-weight:700}
+.deptlist small{color:var(--muted);font-weight:400}
+.none-found{padding:12px;color:var(--muted);font-size:.9rem;margin:0}
+.picked{margin:10px 0 0;font-size:.95rem;min-height:1.65em}
+.picked b{background:linear-gradient(var(--mark),var(--mark)) no-repeat 0 85%/100% 60%}
+
+.row{display:flex;align-items:center;gap:12px;margin-top:6px;font-size:.875rem;color:var(--muted)}
+.row .sp{flex:1}
+.linkbtn{border:0;background:none;color:var(--blue);font:inherit;cursor:pointer;padding:2px 0;text-decoration:underline}
+.primary{width:100%;border:0;border-radius:6px;background:var(--blue);color:#fff;font:700 1rem/1 "Noto Sans KR",sans-serif;padding:15px;cursor:pointer}
+.primary:disabled{background:#aab5cc;cursor:not-allowed}
+.need{margin:0;font-size:.85rem;color:var(--muted)}
+.privacy{margin:0;font-size:.82rem;color:var(--muted)}
+
+.out > *+*{margin-top:16px}
+.empty{background:var(--paper);border:1px dashed var(--line);border-radius:8px;padding:28px 24px}
+.empty h2{margin:0 0 8px;font-size:1.15rem}
+.empty p{margin:0 0 14px;color:var(--muted);max-width:56ch}
+.ghost{border:1px solid var(--blue);background:#fff;color:var(--blue);border-radius:6px;padding:9px 16px;font:500 .95rem "Noto Sans KR",sans-serif;cursor:pointer}
+
+.sum{background:var(--ink);color:#fff;border-radius:8px;padding:20px}
+.sum h2{margin:0;font-size:1.25rem;outline:none}
+.sum .lead{margin:6px 0 16px;color:#d6def0}
+.meter{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:640px){.meter{grid-template-columns:1fr}}
+.segname{font-weight:700;font-size:.92rem;margin-bottom:6px}
+.bar{height:10px;background:rgba(255,255,255,.18);border-radius:5px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:5px}
+.bar i.none{background:var(--none-fill)}.bar i.start{background:var(--warn-fill)}.bar i.strong{background:#43c9a3}
+.segmeta{margin-top:6px;font-size:.85rem;color:#d6def0;display:flex;gap:8px;align-items:center}
+.pill{display:inline-block;border-radius:4px;padding:0 8px;font-size:.8rem;font-weight:700;line-height:1.6}
+.pill.none{background:var(--none-bg);color:var(--none)}.pill.start{background:var(--warn-bg);color:var(--warn)}.pill.strong{background:var(--good-bg);color:var(--good)}
+.note{margin:14px 0 0;font-size:.82rem;color:#b9c4de}
+
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:18px}
+.panel h3{margin:0 0 4px;font-size:1.08rem}
+.panel .sub{margin:0 0 12px;color:var(--muted);font-size:.9rem}
+.area{padding:12px 0;border-top:1px solid #e6ebf3}
+.area:first-of-type{border-top:0;padding-top:0}
+.area h4{margin:0 0 6px;font-size:.98rem;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.kw{display:inline-block;margin:2px 3px 2px 0;padding:0 10px;border-radius:999px;font-size:.85rem;line-height:1.7}
+.kw.on{background:var(--mark)}
+.kw.off{border:1px dashed var(--line);color:var(--muted)}
+.subs .kw.on{background:var(--good-bg);color:var(--good);font-weight:500}
+
+.topics{list-style:none;margin:0;padding:0;counter-reset:t;display:grid;gap:12px}
+.topics>li{counter-increment:t;border:1px solid var(--line);border-left:5px solid var(--blue);border-radius:6px;padding:12px 14px 12px 16px;position:relative}
+.topics>li>.tt{font-weight:700;display:block;padding-left:1.8em;position:relative}
+.topics>li>.tt::before{content:counter(t);position:absolute;left:0;top:0;color:var(--blue)}
+.meta{margin:6px 0 0 1.8em;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.82rem;color:var(--muted)}
+.tag{background:var(--blue-soft);color:var(--blue);border-radius:4px;padding:0 8px;font-weight:500}
+.why{margin:8px 0 0 1.8em;font-size:.92rem}
+details{margin:8px 0 0 1.8em;font-size:.92rem}
+summary{cursor:pointer;color:var(--blue)}
+details p{margin:6px 0 0}
+
+.record{font-family:"Gowun Batang",serif;font-size:1.05rem;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere;padding:0 12px;border:1px solid var(--line);border-radius:6px;
+  background-color:#fff;background-image:linear-gradient(to bottom,transparent calc(1.8em - 1px),#dfe5ef calc(1.8em - 1px));background-size:100% 1.8em;max-height:420px;overflow:auto}
+mark{color:inherit;background:none;background-image:linear-gradient(var(--mark),var(--mark));background-repeat:no-repeat;background-position:0 85%;background-size:100% 62%;padding:0 1px;animation:sweep .7s ease-out both}
+@keyframes sweep{from{background-size:0% 62%}to{background-size:100% 62%}}
+@media (prefers-reduced-motion:reduce){mark{animation:none}}
+
+.modes{display:grid;gap:8px}
+.modes label{position:relative;display:block;cursor:pointer}
+.modes input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.modes span{display:block;border:1px solid var(--line);border-radius:6px;padding:10px 12px 10px 38px;background:#fff;position:relative}
+.modes span::before{content:"";position:absolute;left:12px;top:15px;width:14px;height:14px;border-radius:50%;border:2px solid var(--line);background:#fff}
+.modes input:checked+span{border-color:var(--blue);background:var(--blue-soft)}
+.modes input:checked+span::before{border-color:var(--blue);background:radial-gradient(var(--blue) 0 45%,#fff 50%)}
+.modes input:focus-visible+span{outline:3px solid var(--blue);outline-offset:2px}
+.modes b{display:block}
+.modes small{display:block;color:var(--muted);font-size:.85rem;line-height:1.45}
+.drop{border:2px dashed var(--line);border-radius:8px;padding:14px;text-align:center;background:#fafbfd}
+.drop.over{border-color:var(--blue);background:var(--blue-soft)}
+.filebtn{display:inline-block;background:var(--blue);color:#fff;border-radius:6px;padding:10px 16px;font-weight:700;cursor:pointer}
+.drop input:focus-visible+.filebtn{outline:3px solid var(--ink);outline-offset:2px}
+.drop .or{display:block;margin-top:6px;font-size:.85rem;color:var(--muted)}
+.pdfstat{margin:10px 0 0;font-size:.88rem;min-height:1.4em}
+.pdfstat.ok{color:var(--good)}.pdfstat.err{color:var(--none)}
+.divider{margin:14px 0 8px;font-size:.88rem;color:var(--muted)}
+.manual{margin-top:12px}
+.manual summary{cursor:pointer;font-size:.88rem;color:var(--muted)}
+.manual[open] summary{margin-bottom:8px}
+.clue{display:block;margin-top:4px;color:var(--muted);font-size:.88rem}
+.lvtag{display:inline-block;border-radius:4px;padding:0 8px;font-weight:700;font-size:.8rem;line-height:1.6}
+.lvtag.l1{background:#dcf3ea;color:#17775f}.lvtag.l2{background:#e4ecff;color:#2a5bd7}.lvtag.l3{background:#fff0c9;color:#8a5700}.lvtag.l4{background:#fde3e8;color:#a8324b}
+.aset h4{margin:0 0 4px;font-size:1rem;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tl{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:10px}
+.tl>li{border-top:1px solid #e6ebf3;padding-top:10px}
+.tl .tt{font-weight:700;display:block;padding-left:0}
+.tl .tt::before{content:none}
+.tl .meta,.tl .refs{margin-left:0}
+.aset details{margin-left:0}
+.aset .why{margin-left:0}
+.guide{margin:0}
+.guide ul{margin:6px 0 0;padding-left:0;list-style:none;display:grid;gap:4px;font-size:.9rem}
+.mp{margin:6px 0 0;display:grid;gap:4px;font-size:.92rem}
+.mp p{margin:0;line-height:1.6}
+.mp .nx{color:var(--muted)}
+.mp .nx .lab{color:#2f8a50}
+.mp .lab{font-weight:700;color:var(--muted);margin-right:6px}
+.ctag{display:inline-block;border-radius:4px;padding:0 7px;margin-right:6px;font-weight:700;font-size:.78rem;line-height:1.6}
+.ctag.cm{background:#efe7ff;color:#5b34a8}
+.ctag.cp{background:#e0f4f7;color:#0d6a78}
+.kwref a{font-weight:700}
+.kwnote{color:var(--muted);font-size:.78rem}
+.ctag.cu{background:#e6f4ea;color:#1e6b34}
+.useg{border-left:4px solid #3a9d5d}
+.catnav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (max-width:520px){.catnav{grid-template-columns:1fr}}
+.catnav a{display:flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--cc);border-radius:8px;padding:10px 12px;color:var(--ink);text-decoration:none;font-weight:700;font-size:.93rem;line-height:1.35}
+.catnav a:hover{border-color:var(--cc)}
+.catnav small{margin-left:auto;font-weight:500;color:var(--muted);font-size:.8rem;white-space:nowrap}
+.catno{flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--cc);color:#fff;font-weight:700;font-size:.9rem}
+.c1{--cc:#b87a00}.c2{--cc:#2a5bd7}.c3{--cc:#2f8a50}.c4{--cc:#7a4cc2}
+.cat{scroll-margin-top:12px}
+.cat>*+*{margin-top:12px}
+.cathead{display:flex;gap:12px;align-items:flex-start;background:var(--paper);border:1px solid var(--line);border-left:6px solid var(--cc);border-radius:8px;padding:14px 16px}
+.cathead .catno{width:34px;height:34px;font-size:1.05rem}
+.cathead h2{margin:0;font-size:1.2rem;line-height:1.35;color:var(--cc)}
+.cathead p{margin:4px 0 0;color:var(--muted);font-size:.92rem}
+.cat .panel{border-left:4px solid var(--cc)}
+.tbsrc{font-size:.85rem;color:var(--muted)}
+.tbcnt{font-size:.8rem;font-weight:500;color:var(--muted);margin-left:6px}
+.soon{color:var(--muted);margin:0}
+.guidebox{border-left:4px solid var(--ink)}
+.popsec .paper{font-size:.85rem}
+.guidebox .gcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:8px}
+.guidebox h4{margin:0 0 4px;font-size:.95rem}
+.guidebox ul{margin:0;padding-left:1.1em;font-size:.92rem}
+.guidebox li{margin:3px 0}
+.guidebox .gmyth{margin-top:12px;background:#f5f7fb;border-radius:8px;padding:10px 12px}
+.core{border-left:4px solid #c98a00}
+.core .hot{background:#fff6e0;border-radius:8px;padding:8px 10px;margin:6px 0 10px}
+.core .crs{margin:0 0 9px}
+.core .crs>b{display:block;font-size:.9rem;margin-bottom:3px}
+.core a.kw{text-decoration:none;color:inherit}
+.core a.kw:hover{text-decoration:underline}
+.core details summary{cursor:pointer;font-weight:700;margin:4px 0 8px}
+.core .xlab{display:block;margin:10px 0 4px;font-size:.88rem}.core .xlab small{font-weight:400;color:var(--muted)}
+.core button.ktb.xcs{border-color:#d9b9ff;background:#f7f0ff}
+.dbsec .dbrow{margin-bottom:10px}.dbsec .ktbox .tl{padding-left:0;list-style:none}.dbsec .ktbox .tp{margin:0 0 12px}
+.core .hxwhy{margin:0 0 8px;font-size:.88rem;color:var(--muted)}
+.core button.ktb small.cnt{margin-left:5px;font-size:.72rem;opacity:.7}
+.core button.ktb{font:inherit;font-size:.85rem;cursor:pointer;color:inherit;border:1px solid transparent}
+.core button.ktb:hover{border-color:#c98a00}
+.core button.ktb[aria-expanded=true]{background:#c98a00;border-color:#c98a00;color:#fff}
+.core .ktbox{background:#fffaf0;border:1px solid #f0d9a6;border-left:4px solid #c98a00;border-radius:6px;padding:10px 14px;margin:8px 0 4px}
+.core .ktbox .kthint{font-weight:500;color:var(--muted);font-size:.8rem;margin-left:8px}
+.core .ktbox .kth{margin:0 0 4px;font-weight:700;font-size:.92rem}
+.core .ktbox ul{margin:0;padding-left:1.2em}
+.core .ktbox li{margin:3px 0;font-size:.93rem}
+.core .ktbox li .mp{margin-top:2px;font-size:.88rem}
+.found{border-left-color:#b87a00}
+.ctag.off{background:#f1f3f7;color:#667085;font-weight:500;text-decoration:line-through}
+.mpcheck{display:grid;gap:6px;margin:6px 0 0;font-size:.92rem}
+.mpcheck div{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.mpcheck b{margin-right:6px}
+.refs{margin:6px 0 0 1.8em;font-size:.82rem;color:var(--muted)}
+.refs a{color:var(--blue);overflow-wrap:anywhere}
+.refs ul{margin:2px 0 0;padding-left:1.1em}
+.kw.plain{background:#eef1f6;color:var(--ink)}
+.pair{display:grid;gap:10px;margin-top:10px}
+.pair>div{border-top:1px solid #e6ebf3;padding-top:10px}
+.pair>div:first-child{border-top:0;padding-top:0}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.foot{font-size:.82rem;color:var(--muted);margin:0}
+@media print{
+  body{background:#fff}.input,.actions,.top p{display:none}.layout{display:block;margin:0}
+  .sum{background:#fff;color:#000;border:1px solid #000}.sum .lead,.segmeta,.note{color:#000}.bar{background:#ddd}
+  .panel,.topics>li{break-inside:avoid}
+}
+.popkw{display:inline-block;margin:0 0 6px;font-size:.82rem}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>생기부 주제 길잡이</h1>
+  <p>희망 학과를 고르고 생기부 PDF를 올리면, 이미 해 온 활동과 이어지거나 더 깊어지는 주제를 추천해요. 생기부 없이 학과 기준 주제만 볼 수도 있어요.</p>
+</header>
+
+<main class="layout">
+  <section class="input" aria-label="입력">
+    <div class="block">
+      <h2><span class="step">1</span>희망 학과 찾기</h2>
+      <label for="q" class="sr">학과 또는 관심 분야 검색</label>
+      <input id="q" type="search" placeholder="학과 이름이나 관심 분야 (예: 컴퓨터, 간호, 미세먼지)" autocomplete="off">
+      <div class="tracks" id="tracks" role="group" aria-label="계열 고르기"></div>
+      <ul class="deptlist" id="deptList"></ul>
+      <p class="picked" id="picked">아직 학과를 고르지 않았어요.</p>
+    </div>
+
+    <div class="block">
+      <h2><span class="step">2</span>어떤 추천을 받을까요?</h2>
+      <div class="modes" role="radiogroup" aria-label="추천 방식">
+        <label><input type="radio" name="mode" value="dept" checked><span><b>학과 기준</b><small>생기부와 상관없이 이 학과의 주제 전체</small></span></label>
+        <label><input type="radio" name="mode" value="record"><span><b>내 생기부 기반</b><small>기록과 이어지거나 더 깊어지는 주제</small></span></label>
+      </div>
+    </div>
+
+    <div class="block" id="recBlock">
+      <h2><span class="step">3</span>내 생기부 넣기</h2>
+      <div class="drop" id="drop">
+        <input type="file" id="pdf" class="sr" accept="application/pdf,.pdf">
+        <label for="pdf" class="filebtn">생기부 PDF 올리기</label>
+        <span class="or">또는 파일을 여기로 끌어다 놓으세요</span>
+        <p class="pdfstat" id="pdfStat" aria-live="polite"></p>
+      </div>
+      <details class="manual" id="manual">
+        <summary>PDF가 안 읽힐 때: 내용 직접 붙여 넣기</summary>
+        <label for="rec" class="sr">생기부 내용</label>
+        <textarea id="rec" placeholder="생기부 내용을 여기에 붙여 넣으세요. 인적·학적사항, 출결, 수상경력, 자격증 부분은 자동으로 빼고 분석해요."></textarea>
+      </details>
+      <div class="row">
+        <span id="cnt">0자</span><span class="sp"></span>
+        <button type="button" class="linkbtn" id="clear">지우기</button>
+      </div>
+    </div>
+
+    <button type="button" class="primary" id="go" disabled>생기부 분석하고 주제 추천받기</button>
+    <p class="need" id="need"></p>
+    <p class="privacy">생기부 파일과 글은 이 브라우저 안에서만 처리돼요. 서버로 보내거나 저장하지 않아요. (PDF를 읽는 도구만 인터넷에서 불러와요.)</p>
+  </section>
+
+  <section class="out" id="out" aria-live="polite">
+    <div class="empty">
+      <h2>분석 결과가 여기에 나와요</h2>
+      <p>학과를 고르고 생기부 PDF를 올리면 결과가 여기에 나와요. 지금은 초기화 상태라 분석 기준과 추천 주제가 비어 있어요. '학과 기준'을 고르면 생기부 없이도 주제를 볼 수 있어요.</p>
+    </div>
+  </section>
+</main>
+
+<script src="data-core.js"></script>
+<script src="d-humanities.js"></script>
+<script src="d-social.js"></script>
+<script src="d-education.js"></script>
+<script src="d-natural.js"></script>
+<script src="d-engineering.js"></script>
+<script src="d-others.js"></script>
+<script src="k-humanities.js"></script>
+<script src="k-social.js"></script>
+<script src="k-education.js"></script>
+<script src="k-natural.js"></script>
+<script src="k-engineering.js"></script>
+<script src="k-others.js"></script>
+<script src="u-univ.js"></script>
+<script src="c-humanities.js"></script>
+<script src="c-social.js"></script>
+<script src="c-education.js"></script>
+<script src="c-natural.js"></script>
+<script src="c-engineering.js"></script>
+<script src="c-others.js"></script>
+<script src="ck-humanities.js"></script>
+<script src="ck-social.js"></script>
+<script src="ck-education.js"></script>
+<script src="ck-natural.js"></script>
+<script src="ck-engineering.js"></script>
+<script src="ck-others.js"></script>
+<script src="tb-textbook.js"></script>
+<script src="p-popular.js"></script>
+<script src="h-hot.js"></script>
+<script src="f-found.js"></script>
+<script src="b-humanities.js"></script>
+<script src="b-social.js"></script>
+<script src="b-education.js"></script>
+<script src="b-natural.js"></script>
+<script src="b-engineering.js"></script>
+<script src="b-others.js"></script>
+<script src="x-humanities.js"></script>
+<script src="x-social.js"></script>
+<script src="x-education.js"></script>
+<script src="x-natural.js"></script>
+<script src="x-engineering.js"></script>
+<script src="x-others.js"></script>
+<script>
+const TRACKS=["전체","인문","사회","자연","공학","의약학","교육","예체능","융합"];
+const LV={none:"비어 있음",start:"시작 단계",strong:"탄탄함"};
+const SAMPLE="";
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm=s=>s.toLowerCase().replace(/\s+/g,"");
+
+let track="전체", selected=null, mode="dept";
+
+/* ===== 학과 목록 ===== */
+function kwPattern(k){
+  /* 줄바꿈으로 단어가 끊겨도(PDF 표 칸 줄바꿈) 찾을 수 있게 글자 사이에 줄바꿈을 허용한다 */
+  const ascii=/^[\x00-\x7F]+$/.test(k);
+  const parts=[...k].map(c=>c===" "?"\\s*":c.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"));
+  const body=parts.join(ascii?"":"(?:\\n\\s*)?");
+  return (ascii&&!/\s/.test(k)) ? "(?<![A-Za-z0-9])"+body+"(?![A-Za-z0-9])" : body;
+}
+function matchDepts(){
+  const q=norm($("q").value);
+  return DEPTS.filter(d=>(track==="전체"||d.track===track)).map(d=>{
+    if(!q) return {d,rank:1};
+    const names=norm(d.name+d.alias.join("")+d.track);
+    if(names.includes(q)) return {d,rank:0};
+    const deep=norm(d.areas.map(a=>a.name+a.k.join("")).join(""));
+    return deep.includes(q)?{d,rank:2}:null;
+  }).filter(Boolean).sort((a,b)=>a.rank-b.rank||TRACKS.indexOf(a.d.track)-TRACKS.indexOf(b.d.track)).map(x=>x.d);
+}
+function drawList(){
+  const list=matchDepts();
+  const ul=$("deptList");
+  if(!list.length){
+    ul.innerHTML='<li><p class="none-found">찾는 학과가 아직 목록에 없어요. 비슷한 이름이나 관심 분야로 다시 검색하거나, 계열 버튼을 눌러 전체 목록을 확인해 보세요.</p></li>';
+    return;
+  }
+  ul.innerHTML=list.map(d=>`<li><button type="button" data-n="${esc(d.name)}" aria-pressed="${selected&&selected.name===d.name}">${esc(d.name)}<small>${esc(d.track)}</small></button></li>`).join("");
+}
+function drawTracks(){
+  $("tracks").innerHTML=TRACKS.map(t=>`<button type="button" data-t="${esc(t)}" aria-pressed="${t===track}">${esc(t)}</button>`).join("");
+}
+function refreshState(){
+  const len=stripCommon($("rec").value).length;
+  $("cnt").textContent=$("rec").value.length.toLocaleString("ko-KR")+"자";
+  $("picked").innerHTML=selected?`선택한 학과: <b>${esc(selected.name)}</b>`:"아직 학과를 고르지 않았어요.";
+  const rec=mode==="record";
+  $("recBlock").hidden=!rec;
+  $("go").textContent=rec?"생기부 분석하고 주제 추천받기":"이 학과 주제 보기";
+  const ok=!!selected&&(!rec||len>=20);
+  $("go").disabled=!ok;
+  $("need").textContent=!selected?"먼저 위에서 희망 학과를 골라 주세요."
+    :(rec&&len<20?"생기부 PDF를 올리거나 내용을 20자 이상 넣어 주세요.":"");
+  $("need").style.display=ok?"none":"block";
+}
+
+/* ===== 분석 ===== */
+function snippet(text,k){
+  const m=new RegExp(kwPattern(k),"i").exec(text); if(!m) return "";
+  const s=Math.max(0,m.index-28), e=Math.min(text.length,m.index+m[0].length+28);
+  const piece=text.slice(s,e).replace(/([가-힣A-Za-z0-9,])[ \t]*\n\s*(?=[가-힣])/g,"$1").replace(/\s+/g," ").trim();
+  return (s>0?"…":"")+piece+(e<text.length?"…":"");
+}
+function analyze(d,text){
+  const areas=d.areas.map(a=>{
+    const found=[]; let hits=0;
+    a.k.forEach(k=>{
+      const m=text.match(new RegExp(kwPattern(k),"gi"));
+      if(m){found.push(k);hits+=m.length;}
+    });
+    const cnt=found.length;
+    return {...a,found,hits,cnt,snip:cnt?snippet(text,found[0]):"",level:cnt===0?"none":cnt<3?"start":"strong",score:Math.min(1,cnt/3)};
+  });
+  const flat=text.replace(/\s+/g,"");
+  const subs=d.s.map(x=>{
+    const [label,stems]=x.includes("=")?x.split("="):[x,x];
+    return {label,present:stems.split("/").some(st=>flat.includes(st.replace(/\s+/g,"")))};
+  });
+  return {areas,subs};
+}
+function highlight(text,areas){
+  const all=[...new Set(areas.flatMap(a=>a.found))].sort((x,y)=>y.length-x.length);
+  if(!all.length) return esc(text);
+  const re=new RegExp(all.map(kwPattern).join("|"),"gi");
+  let out="",last=0;
+  text.replace(re,(m,off)=>{out+=esc(text.slice(last,off))+"<mark>"+esc(m)+"</mark>";last=off+m.length;return m;});
+  return out+esc(text.slice(last));
+}
+/* 주제마다 DBpia 핵심 키워드를 보여 주고, 누르면 DBpia에서 그 키워드로 검색해요. */
+function refsHtml(t,indent){
+  if(!t.kw) return "";
+  return `<div class="refs kwref"${indent===false?' style="margin-left:0"':''}>더 찾아볼 키워드 <a href="${esc(DBS(t.kw))}" target="_blank" rel="noopener noreferrer">${esc(t.kw)}</a> <span class="kwnote">(DBpia 검색)</span></div>`;
+}
+const REC={none:["발전","발전"],start:["발전","심화"],strong:["심화","도전"]};
+const LVC={발전:"l2",심화:"l3",도전:"l4"};
+function topicFor(a){
+  const main=[];
+  REC[a.level].forEach(lv=>{const t=a.T.find(x=>x.lv===lv&&!main.includes(x));if(t)main.push(t);});
+  return {main,rest:a.T.filter(t=>!main.includes(t))};
+}
+function howHtml(t){
+  if(!t.how&&!t.next) return "";
+  return `<div class="mp">${t.how?`<p><b class="lab">탐구 방법</b>${esc(t.how)}</p>`:""}${t.next?`<p class="nx"><b class="lab">이어가기</b>${esc(t.next)}</p>`:""}</div>`;
+}
+const UNIV_RE=/^https:\/\/(www\.snu\.ac\.kr|www\.skku\.edu|www\.korea\.ac\.kr|hanyang\.scholarworks\.kr)\//;
+function srcHtml(t){
+  if(!t.src||!UNIV_RE.test(t.src[1])) return "";
+  return `<div class="refs" style="margin-left:0">참고한 대학 연구 소식<ul><li><a href="${esc(t.src[1])}" target="_blank" rel="noopener noreferrer">${esc(t.src[0])}</a></li></ul></div>`;
+}
+function topicItem(t,showArea){
+  return `<li class="tp"><span class="tt">${esc(t.t)}</span>${howHtml(t)}${showArea&&t.area?`<div class="meta"><span>${esc(t.area)}</span></div>`:""}${refsHtml(t,false)}${srcHtml(t)}</li>`;
+}
+function coreChips(arr){return arr.map(k=>`<a class="kw plain" href="${DBS(k)}" target="_blank" rel="noopener noreferrer">${esc(k)}</a>`).join("");}
+const CATS=[
+  {id:"cat-major",no:1,cls:"c1",name:"대학교 전공 수업 속 생기부 주제",desc:"이 학과의 전공 수업 이름을 누르면, 그 수업을 듣기 전에 고등학교에서 탐구해 보면 좋을 진로활동 주제가 열려요."},
+  {id:"cat-dbpia",no:2,cls:"c2",name:"DBPIA 논문 속 생기부 주제",desc:"DBpia 논문의 핵심 키워드를 바탕으로, 학교에서 직접 해 볼 수 있게 새로 만든 주제예요. 주제마다 '탐구 방법'을 붙였어요."},
+  {id:"cat-univ",no:3,cls:"c3",name:"대학 연구 응용 주제",desc:"대학 연구 소식에 소개된 연구 아이디어를 고등학생 수준의 실험·조사로 옮긴 주제예요."},
+  {id:"cat-book",no:4,cls:"c4",name:"교과서 속 생기부 주제",desc:"교과서의 읽기자료·탐구 활동·쟁점 토론에서 출발해 한 단계 넓히고 깊게 만든 주제예요."}
+];
+/* 대학 학생부전형 가이드북(2027학년도) 3종에서 정리한 탐구 길잡이 */
+const GUIDE=[
+  ["시작할 때",["탐구는 교과서 개념에서 출발해요. 어느 과목의 어떤 개념인지 분명하게.","수행평가가 가장 좋은 출발점이에요. 과제 안에서 나만의 궁금증을 찾아요.","일상의 '왜?'를 방금 배운 개념에 대 보세요."]],
+  ["탐구하는 동안",["결과보다 과정과 변화가 평가돼요. 질문 → 가설 → 설계 → 분석 → 한계 순서로 남겨요.","예상과 다른 결과·기각된 가설도 원인을 따지면 좋은 탐구가 돼요.","대학 수준 지식보다 고교 개념을 깊게. 설명 못 할 개념은 오히려 불리해요.","자료는 직접 모으고, 표·그래프의 해석을 문장으로 남겨요."]],
+  ["마무리와 다음",["한계를 적으면 다음 탐구가 보여요. 각 주제의 '이어가기'를 활용해요.","활동 개수보다 하나를 깊게, 학년이 오를수록 한 단계씩 심화해요.","알게 된 것을 친구들과 나누고, 팀 탐구에선 내 역할을 분명히 해요."]]
+];
+const MYTH=["모든 과목 세특에 진로를 끼워 넣어야 한다 → 그 과목의 역량이 먼저 보여야 해요.","어려운 이론·전문 용어가 많을수록 좋다 → 고교 수준에서 정확히 설명할 수 있는 게 중요해요.","진로가 바뀌면 불리하다 → 바뀐 이유와 탐색 과정이 보이면 괜찮아요.","책을 많이 읽을수록 좋다 → 읽은 내용을 탐구에 어떻게 썼는지가 중요해요."];
+function guideSection(){
+  return `<section class="panel guidebox" aria-labelledby="gdh">
+    <h3 id="gdh">생기부 탐구, 이렇게 하면 좋아요</h3>
+    <p class="sub">2027학년도 대학 학생부전형 가이드북 3종에서 평가자가 강조한 내용을 정리했어요.</p>
+    <div class="gcols">${GUIDE.map(([h,arr])=>`<div><h4>${h}</h4><ul>${arr.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`).join("")}</div>
+    <div class="gmyth"><h4>흔한 오해</h4><ul>${MYTH.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+    <p class="foot" style="margin-top:8px">기록을 정리할 때는 <b>무엇을 · 왜 · 어떻게 · 그래서 무엇이 달라졌나</b> 네 가지가 드러나는지 점검해 보세요.</p>
+  </section>`;
+}
+const DBT=[["학과","학과 이름으로 찾은 논문"],["수업","전공 수업으로 찾은 논문"],["주목","주목받는 주제로 찾은 논문"]];
+function dbCount(d){return (d.db||[]).reduce((s,g)=>s+g.T.length,0);}
+function dbItem(o){return `<li class="tp">${o.kw?`<span class="kw plain popkw">핵심 키워드 · ${esc(o.kw)}</span>`:""}<span class="tt">${esc(o.t)}</span>${howHtml(o)}<div class="refs paper" style="margin-left:0">출발 논문 <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=${encodeURIComponent(o.id)}" target="_blank" rel="noopener noreferrer">${esc(o.title)}</a> <span class="kwnote">(${esc(o.journal)}, ${esc(o.ym)} · 이용 ${Number(o.use).toLocaleString("ko-KR")}회)</span></div></li>`;}
+function dbSection(d){
+  const db=d.db||[];
+  return `<section class="panel core dbsec">
+    <h3>DBpia 논문에서 출발한 주제</h3>
+    <p class="sub">학과 이름·전공 수업·주목받는 주제로 DBpia를 검색해, 많이 읽힌 논문(이용순)과 최근 논문에서 <b>핵심 키워드 하나</b>만 가져와 고등학생이 직접 해 볼 수 있게 새로 만든 주제예요. 버튼을 누르면 주제와 출발 논문이 열려요.</p>
+    ${DBT.map(([ty,lab])=>{const gs=db.filter(g=>g.type===ty);if(!gs.length)return "";return `<div class="hot dbrow"><b class="xlab">${lab}</b><div>${gs.map(g=>`<button type="button" class="kw plain ktb" data-s="db" data-k="${esc(g.label)}" aria-expanded="false">${esc(g.label)}<small class="cnt">${g.T.length}</small></button>`).join("")}</div><div class="ktbox" hidden></div></div>`;}).join("")}
+  </section>`;
+}
+function dbLines(d,lines){
+  const db=d.db||[];if(!db.length)return false;
+  DBT.forEach(([ty,lab])=>{db.filter(g=>g.type===ty).forEach(g=>{lines.push(`[${lab}: ${g.label}]`);g.T.forEach(o=>{lines.push(`- [${o.kw}] ${o.t}`);lines.push(`    탐구 방법: ${o.how}`);lines.push(`    이어가기: ${o.next}`);lines.push(`    출발 논문: ${o.title} (${o.journal}, ${o.ym}, 이용 ${o.use}회) https://www.dbpia.co.kr/journal/articleDetail?nodeId=${o.id}`);});});});
+  return true;
+}
+function popSection(d){
+  const list=d.pop||[]; if(!list.length) return "";
+  return `<section class="panel popsec">
+    <h3>많이 읽힌 논문에서 출발한 주제</h3>
+    <p class="sub" style="margin-top:2px">DBpia에서 이 학문 분야 논문을 '이용순'으로 정렬했을 때 위쪽에 오는 논문들이에요(2026년 10월 기준, 주로 최근 5년). 논문의 연구를 따라 하는 게 아니라, 논문에서 <b>핵심 키워드 하나</b>만 가져와 학교·집·동네에서 직접 해 볼 수 있게 새로 만든 주제예요.</p>
+    <ul class="tl">${list.map(o=>`<li class="tp">${o.kw?`<span class="kw plain popkw">핵심 키워드 · ${esc(o.kw)}</span>`:""}<span class="tt">${esc(o.t)}</span>${howHtml(o)}<div class="refs paper" style="margin-left:0">출발 논문 <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=${encodeURIComponent(o.id)}" target="_blank" rel="noopener noreferrer">${esc(o.title)}</a> <span class="kwnote">(${esc(o.journal)}, ${esc(o.ym)} · 이용 ${Number(o.use).toLocaleString("ko-KR")}회)</span></div></li>`).join("")}</ul>
+  </section>`;
+}
+function popLines(d,lines){
+  const list=d.pop||[]; if(!list.length) return;
+  lines.push("[많이 읽힌 논문에서 출발한 주제]");
+  list.forEach(o=>{lines.push(`- ${o.kw?`[${o.kw}] `:""}${o.t}`);lines.push(`    탐구 방법: ${o.how}`);lines.push(`    이어가기: ${o.next}`);lines.push(`    출발 논문: ${o.title} (${o.journal}, ${o.ym}, 이용 ${o.use}회) https://www.dbpia.co.kr/journal/articleDetail?nodeId=${o.id}`);});
+}
+function tbList(d){return TBOOK.filter(x=>(x.depts||[]).includes(d.name));}
+function catCounts(d,c2){
+  const kt=(d.cs||[]).reduce((s,c)=>s+c.T.length,0)+(d.hx||[]).reduce((s,c)=>s+c.T.length,0);
+  const tb=tbList(d).length;
+  return [kt?`주제 ${kt}개`:"준비 중",c2?`주제 ${c2}개`:"준비 중",(d.U||[]).length?`주제 ${(d.U||[]).length}개`:"준비 중",tb?`주제 ${tb}개`:"준비 중"];
+}
+function catNav(d,c2){
+  const n=catCounts(d,c2);
+  return `<nav class="catnav" aria-label="생기부 주제 카테고리">${CATS.map((c,i)=>`<a href="#${c.id}" class="${c.cls}"><span class="catno">${c.no}</span><span>${esc(c.name)}</span><small>${esc(n[i])}</small></a>`).join("")}</nav>`;
+}
+function catWrap(i,inner){
+  const c=CATS[i];
+  return `<section class="cat ${c.cls}" id="${c.id}" aria-labelledby="${c.id}-h">
+    <header class="cathead"><span class="catno" aria-hidden="true">${c.no}</span><div><h2 id="${c.id}-h">${esc(c.name)}</h2><p>${c.desc}</p></div></header>
+    ${inner}
+  </section>`;
+}
+function coreSection(d,open){
+  const cs=d.cs||[]; if(!cs.length) return `<section class="panel"><p class="soon">이 학과의 전공 수업 정보는 아직 준비 중이에요.</p></section>`;
+  return foundSection(d)+`<section class="panel core">
+    <h3>전공 수업별 생기부 주제</h3>
+    <p class="sub">이 학과에서 보통 듣게 되는 전공 수업이에요. 수업 이름을 누르면, 그 수업을 듣기 전에 고등학교에서 해 볼 만한 진로활동 주제가 열려요. 수업 이름은 대학마다 조금씩 달라요.</p>
+    <div class="hot"><div>${cs.map(x=>`<button type="button" class="kw plain ktb" data-s="cs" data-k="${esc(x.c)}" aria-expanded="false">${esc(x.c)}<small class="cnt">${x.T.length}</small></button>`).join("")}</div><div class="ktbox" hidden></div></div>
+  </section>`+hotSection(d);
+}
+function hotSection(d){
+  const hx=d.hx||[]; if(!hx.length) return "";
+  return `<section class="panel core hxsec">
+    <h3>전공 관련 주목받는 주제</h3>
+    <p class="sub">이 학과와 관련 계열에서 요즘 관심이 높은 주제예요. 주제를 누르면 왜 주목받는지와 함께 직접 해 볼 만한 탐구 주제가 열려요.</p>
+    <div class="hot"><div>${hx.map(x=>`<button type="button" class="kw plain ktb" data-s="hx" data-k="${esc(x.k)}" aria-expanded="false">${esc(x.k)}<small class="cnt">${x.T.length}</small></button>`).join("")}</div><div class="ktbox" hidden></div></div>
+  </section>`;
+}
+function foundSection(d){
+  const list=(d.fd||[]).filter(n=>FOUND[n]&&FOUND[n].length);
+  if(!list.length) return "";
+  return `<section class="panel core found">
+    <h3>기초 학문 탐구</h3>
+    <p class="sub" style="margin:2px 0 8px">이 학과에만 머물지 않고, 바탕이 되는 학문 자체를 깊이 파고드는 주제예요. 학문을 누르면 주제가 열려요.</p>
+    <div class="crs"><div>${list.map(n=>`<button type="button" class="kw plain ktb" data-s="fd" data-k="${esc(n)}" aria-expanded="false">${esc(n)}</button>`).join("")}</div><div class="ktbox" hidden></div></div>
+  </section>`;
+}
+function bookSection(d){
+  const list=tbList(d);
+  const books=[...new Set(TBOOK.map(x=>x.book))];
+  if(!list.length) return `<section class="panel"><p class="soon">${books.length?`지금 들어 있는 교과서(${esc(books.join(", "))})에서는 이 학과와 바로 이어지는 주제를 찾지 못했어요. 다른 교과서가 추가되면 여기에 나와요.`:"교과서 속 생기부 주제는 준비 중이에요."}</p></section>`;
+  const by=books.map(b=>[b,list.filter(x=>x.book===b)]).filter(x=>x[1].length);
+  return by.map(([b,arr])=>`<section class="panel">
+    <h3>${esc(b)} <small class="tbcnt">주제 ${arr.length}개</small></h3>
+    <ul class="tl">${arr.map(t=>`<li class="tp"><span class="tt">${esc(t.t)}</span>${howHtml(t)}<div class="meta"><span class="tbsrc">출발한 활동: ${esc([t.unit,t.page,t.act].filter(Boolean).join(" · "))}</span></div></li>`).join("")}</ul>
+  </section>`).join("")+`<p class="foot">교과서 본문은 옮기지 않았어요. 어느 단원·쪽의 어떤 활동에서 출발했는지만 적었으니, 교과서를 펴서 그 활동과 함께 보세요.</p>`;
+}
+function bookLines(d,lines){
+  const list=tbList(d); if(!list.length) return;
+  lines.push("■ 4. 교과서 속 생기부 주제");
+  list.forEach(t=>{lines.push(`- ${t.t} (${[t.book,t.unit,t.page,t.act].filter(Boolean).join(" · ")})`);if(t.how)lines.push(`    탐구 방법: ${t.how}`);if(t.next)lines.push(`    이어가기: ${t.next}`);});
+  lines.push("");
+}
+function coreLines(d,lines){
+  const cs=d.cs||[]; if(!cs.length) return;
+  lines.push("■ 1. 대학교 전공 수업 속 생기부 주제");
+  cs.forEach(x=>{lines.push(`[${x.c}]`);x.T.forEach(t=>{lines.push(`- ${t.t}`);if(t.how)lines.push(`    탐구 방법: ${t.how}`);if(t.next)lines.push(`    이어가기: ${t.next}`);});});
+  lines.push("(수업 이름은 대학마다 조금씩 달라요)");
+  if((d.hx||[]).length){lines.push("[전공 관련 주목받는 주제]");d.hx.forEach(x=>{lines.push(`< ${x.k} > ${x.why}`);x.T.forEach(t=>{lines.push(`- ${t.t}`);lines.push(`    탐구 방법: ${t.how}`);lines.push(`    이어가기: ${t.next}`);});});}
+  lines.push("");
+}
+function univSection(d){
+  const list=d.U||[];
+  if(!list.length) return `<section class="panel"><p class="soon">이 학과와 바로 이어지는 대학 연구 소식은 아직 고르지 못했어요. 1·2번 카테고리의 주제를 활용해 보세요.</p></section>`;
+  return `<section class="panel useg">
+    <p class="sub" style="margin-top:0">연구 내용을 그대로 재현하라는 뜻이 아니라, 연구 아이디어를 내 수준의 실험·조사로 옮겨 보는 거예요.</p>
+    <ul class="tl">${list.map(t=>topicItem(t,true)).join("")}</ul>
+  </section>`;
+}
+function bridgeText(a,areas){
+  const others=areas.filter(x=>x!==a&&x.cnt>0).sort((x,y)=>y.cnt-x.cnt);
+  const q=arr=>arr.slice(0,2).map(k=>`'${esc(k)}'`).join("·");
+  if(a.level==="strong") return `이 영역은 ${q(a.found)} 활동이 이미 탄탄해요. 심화 주제로 깊이를 더해 보세요.`;
+  if(a.cnt>0) return `이 영역은 ${q(a.found)} 활동으로 시작했어요. 한 단계 더 깊게 이어 가 보세요.`;
+  if(others.length) return `이 영역은 아직 비어 있어요. 이미 기록에 있는 ${q(others[0].found)} 활동에서 이어 가면 자연스러워요.`;
+  return "기록에 아직 이 학과와 겹치는 활동이 없어요. 첫 활동으로 시작하기 좋아요.";
+}
+function summaryLine(areas){
+  const total=areas.reduce((s,a)=>s+a.cnt,0);
+  const hi=[...areas].sort((a,b)=>b.cnt-a.cnt)[0], lo=[...areas].sort((a,b)=>a.cnt-b.cnt)[0];
+  if(total===0) return "이 학과와 겹치는 키워드가 아직 보이지 않아요. 아래 주제에서 첫 활동을 골라 보세요.";
+  if(areas.every(a=>a.level==="strong")) return "세 영역이 고르게 채워져 있어요. 심화 주제로 깊이를 더해 보세요.";
+  if(hi.cnt===lo.cnt) return "세 영역에 비슷한 정도로 키워드가 나와요. 어느 영역이든 한 단계 더 깊이 들어가 볼 때예요.";
+  return `'${hi.name}' 영역은 이미 쌓이고 있고, '${lo.name}' 영역이 가장 비어 있어요.`;
+}
+
+/* ===== 화면 그리기 ===== */
+function render(d,text){
+  const len=text.length;
+  return `
+  <section class="sum">
+    <h2 id="resHead" tabindex="-1">${esc(d.name)} 연계 분석</h2>
+    <p class="lead">내 생기부 기반 분석은 초기화 상태예요. 분석 기준(학과별 영역·키워드)과 추천 주제를 채우면 여기에 결과가 나와요.</p>
+    <p class="note">읽어 들인 생기부 본문(인적·학적사항, 출결, 수상경력, 자격증 제외)은 ${len.toLocaleString("ko-KR")}자예요. 이 글은 브라우저 안에만 있고 서버로 보내지 않아요.</p>
+  </section>
+  ${catNav(d,dbCount(d))}
+  ${catWrap(0,coreSection(d,true))}
+  ${catWrap(1,(d.db||[]).length?dbSection(d):`<section class="panel"><p class="soon">내 기록과 이어지는 DBPIA 논문 속 주제는 준비 중이에요.</p></section>`)}
+  ${catWrap(2,univSection(d))}
+  ${catWrap(3,bookSection(d))}
+  ${guideSection()}
+  <div class="actions">
+    <button type="button" class="ghost" id="copy">결과 요약 복사</button>
+    <button type="button" class="ghost" id="print">인쇄·PDF로 저장</button>
+  </div>
+  <p class="foot">학과별 키워드와 주제는 아직 채워지지 않았어요. 대학마다 인재상과 전형 요강이 다르니 지원 대학 자료와 선생님 조언을 함께 확인하세요.</p>`;
+}
+function renderDept(d){
+  return `
+  <section class="sum">
+    <h2 id="resHead" tabindex="-1">${esc(d.name)} 주제 모음</h2>
+    <p class="lead">생기부와 상관없이, 이 학과와 이어지는 생기부 주제를 네 가지 카테고리로 모았어요. 주제마다 어떻게 접근하고 탐구하면 좋을지 짧은 '탐구 방법'을 붙였어요.</p>
+    <p class="note">내 생기부와 비교한 결과가 아니에요. 내 기록에 맞춘 추천은 '내 생기부 기반'을 골라 PDF를 올려 보세요.</p>
+  </section>
+  ${catNav(d,dbCount(d)||d.areas.reduce((s,a)=>s+a.T.length,0))}
+  ${catWrap(0,coreSection(d,true))}
+  ${catWrap(1,(d.db||[]).length?dbSection(d):(d.pop||[]).length||d.areas.length?popSection(d)+d.areas.map(a=>`
+  <section class="panel areasec">
+    <h3>${esc(a.name)}</h3>
+    <p class="sub">이 영역의 핵심 표현</p>
+    <div>${a.k.map(k=>`<span class="kw plain">${esc(k)}</span>`).join("")}</div>
+    <ul class="tl">${a.T.map(t=>topicItem(t)).join("")}</ul>
+  </section>`).join(""):`<section class="panel"><p class="soon">이 학과의 DBPIA 논문 속 주제는 아직 준비 중이에요.</p></section>`)}
+  ${catWrap(2,univSection(d))}
+  ${catWrap(3,bookSection(d))}
+  ${guideSection()}
+  <div class="actions">
+    <button type="button" class="ghost" id="copy">주제 목록 복사</button>
+    <button type="button" class="ghost" id="print">인쇄·PDF로 저장</button>
+  </div>
+  <p class="foot">주제는 예시예요. 주제마다 붙은 키워드는 DBpia 논문에서 가져온 핵심어이고, 주제 자체는 고등학생이 직접 할 수 있게 새로 만든 거예요. '대학 연구 응용 주제'는 대학 연구 소식의 제목과 소개를 바탕으로 만든 거예요. 실제로 진행하고 기록하려면 수업·동아리·진로활동 안에서 할 수 있는 형태로 담당 선생님과 상의해 정하세요. 대학마다 인재상과 전형이 다르니 지원 대학 자료도 함께 확인하세요.</p>`;
+}
+function univLines(d,lines){
+  if(!(d.U||[]).length) return;
+  lines.push("■ 3. 대학 연구 응용 주제");
+  d.U.forEach(t=>{lines.push(`- ${t.t} (${t.area})`);lines.push(`    탐구 방법: ${t.how}`);if(t.next)lines.push(`    이어가기: ${t.next}`);lines.push(`    참고 연구 소식: ${t.src[0]} ${t.src[1]}`);});
+  lines.push("");
+}
+function deptText(d){
+  const lines=[`[${d.name}] 생기부 주제 모음 (생기부와 무관)`,""];
+  coreLines(d,lines);
+  lines.push("■ 2. DBPIA 논문 속 생기부 주제");
+  if(!dbLines(d,lines)) popLines(d,lines);
+  d.areas.forEach(a=>{lines.push(`[${a.name}]`);a.T.forEach(t=>{lines.push(`- ${t.t}`);if(t.how)lines.push(`    탐구 방법: ${t.how}`);if(t.next)lines.push(`    이어가기: ${t.next}`);if(t.kw)lines.push(`    DBpia 검색 키워드: ${t.kw}`);});});
+  lines.push("");
+  univLines(d,lines);bookLines(d,lines);
+  return lines.join("\n");
+}
+function summaryText(d,text){
+  return `${d.name} 연계 분석 — 초기화 상태(분석 기준과 주제가 아직 없어요). 읽어 들인 본문 ${text.length}자.`;
+}
+
+/* ===== 이벤트 ===== */
+function run(){
+  const d=selected,text=stripCommon($("rec").value);
+  const deptMode=mode==="dept";
+  $("out").innerHTML=deptMode?renderDept(d):render(d,text);
+  const head=$("resHead");
+  if(window.matchMedia("(max-width:860px)").matches){
+    head.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"start"});
+  }
+  head.focus({preventScroll:true});
+  $("copy").onclick=async()=>{
+    const t=deptMode?deptText(d):summaryText(d,text),b=$("copy"),label=b.textContent;
+    try{await navigator.clipboard.writeText(t);b.textContent="복사했어요";}
+    catch(e){const ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();
+      try{document.execCommand("copy");b.textContent="복사했어요";}catch(_){b.textContent="복사하지 못했어요";}ta.remove();}
+    setTimeout(()=>b.textContent=label,1800);
+  };
+  $("print").onclick=()=>window.print();
+}
+$("q").addEventListener("input",drawList);
+$("tracks").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;track=b.dataset.t;drawTracks();drawList();});
+$("deptList").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-n]");if(!b)return;
+  selected=DEPTS.find(d=>d.name===b.dataset.n);drawList();refreshState();
+});
+$("out").addEventListener("click",e=>{
+  const kb=e.target.closest("button.ktb");
+  if(kb){
+    const row=kb.closest(".crs,.hot"),box=row.querySelector(".ktbox"),open=kb.getAttribute("aria-expanded")==="true";
+    row.querySelectorAll("button.ktb").forEach(x=>x.setAttribute("aria-expanded","false"));
+    if(open){box.hidden=true;box.innerHTML="";return;}
+    const k=kb.dataset.k;let list;
+    let why="";
+    if(kb.dataset.s==="cs"){const c=(selected.cs||[]).find(x=>x.c===k);list=c?c.T:[];}
+    else if(kb.dataset.s==="hx"){const c=(selected.hx||[]).find(x=>x.k===k);list=c?c.T:[];why=c?c.why:"";}
+    else if(kb.dataset.s==="db"){const c=(selected.db||[]).find(x=>x.label===k);box.innerHTML=`<p class="kth">‘${esc(k)}’로 찾은 논문에서 출발한 주제</p><ul class="tl">${(c?c.T:[]).map(dbItem).join("")}</ul>`;box.hidden=false;kb.setAttribute("aria-expanded","true");return;}
+    else{const src=kb.dataset.s==="ht"?selected.ht:kb.dataset.s==="fd"?FOUND:selected.kt;list=(src&&src[k])||[];}
+    box.innerHTML=`<p class="kth">${kb.dataset.s==="fd"?`‘${esc(k)}’ 자체를 파고드는 탐구 주제`:kb.dataset.s==="cs"?`‘${esc(k)}’ 수업을 듣기 전에 해 볼 만한 진로활동 주제`:kb.dataset.s==="hx"?`‘${esc(k)}’로 해 볼 만한 탐구 주제`:`‘${esc(k)}’로 해 볼 만한 탐구 주제`}${kb.dataset.s==="ht"?`<span class="kthint">만들고 검증하기 · 논증하고 설계하기</span>`:""}</p>${why?`<p class="hxwhy">${esc(why)}</p>`:""}<ul>${list.map(t=>typeof t==="string"?`<li>${esc(t)}</li>`:`<li>${esc(t.t)}${howHtml(t)}</li>`).join("")}</ul>`;
+    box.hidden=false;kb.setAttribute("aria-expanded","true");return;
+  }
+});
+$("rec").addEventListener("input",refreshState);
+$("clear").onclick=()=>{$("rec").value="";setStat("");refreshState();$("rec").focus();};
+$("go").onclick=run;
+document.querySelectorAll('input[name=mode]').forEach(r=>r.addEventListener("change",()=>{mode=r.value;refreshState();}));
+
+/* ===== 생기부 PDF 읽기 (pdf.js, 이 브라우저 안에서만) ===== */
+const PDFJS=[
+  ["https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js","https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"],
+  ["https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js","https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js"]
+];
+let pdfLoad=null;
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=()=>{s.remove();rej(new Error("load "+src));};document.head.appendChild(s);});}
+function loadPdfJs(){
+  if(window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+  if(!pdfLoad) pdfLoad=(async()=>{
+    for(const [lib,worker] of PDFJS){
+      try{await loadScript(lib);window.pdfjsLib.GlobalWorkerOptions.workerSrc=worker;return window.pdfjsLib;}catch(e){}
+    }
+    pdfLoad=null;throw new Error("PDFJS_LOAD");
+  })();
+  return pdfLoad;
+}
+function setStat(msg,cls){const s=$("pdfStat");s.textContent=msg;s.className="pdfstat"+(cls?" "+cls:"");}
+/* 생기부 공통 부분(인쇄 머리글, 인적·학적사항, 출결, 수상경력, 자격증)은 분석에서 뺀다.
+   '질병 결석' 같은 서식 글자를 탐구 키워드로 잘못 잡지 않게 하려는 거예요. */
+const ADMIN_H=/^\s*(?:\d+\s*\.\s*)?(?:인적\s*[·ㆍ.]?\s*학적\s*사항|출결\s*상황|수상\s*경력|자격증\s*및\s*인증\s*취득\s*상황)\s*$/;
+const BODY_H=/^\s*(?:\d+\s*\.\s*)?(?:창의적\s*체험\s*활동\s*상황|교과\s*학습\s*발달\s*상황|독서\s*활동\s*상황|행동\s*특성\s*및\s*종합\s*의견|봉사\s*활동\s*실적)/;
+function stripCommon(t){
+  const lines=String(t||"").split(/\r?\n/).filter(l=>!(
+    /\d{4}\.\d{1,2}\.\d{1,2}\s+\d{1,2}:\d{2}\s*\/\s*[\d.*]+/.test(l)||            /* 인쇄 머리글: 학교/일시/IP/출력자 */
+    /^\s*\/\s*\d+\s*\S*학교.*\d{4}\s*년.*성명/.test(l)||                          /* 쪽 머리글: 학교·날짜·반·번호·성명 */
+    /^\s*학교생활(세부사항)?기록부/.test(l)));
+  const out=[];let skip=false;
+  for(const l of lines){
+    if(ADMIN_H.test(l)){skip=true;continue;}
+    if(BODY_H.test(l)) skip=false;
+    if(!skip) out.push(l);
+  }
+  let r=out.join("\n");
+  /* 첫 본문 제목 앞(졸업대장·반·담임 표 등)도 뺀다 */
+  const m=r.split("\n").findIndex(l=>BODY_H.test(l));
+  if(m>0) r=r.split("\n").slice(m).join("\n");
+  return r.replace(/질병\s*미인정\s*기타/g," ").replace(/\n{3,}/g,"\n\n").trim();
+}
+function cleanPdfText(t){
+  return t
+    .replace(/\d{6}\s*-\s*[1-4]\d{6}/g,"[주민번호 가림]")
+    .replace(/01[016-9][-\s]?\d{3,4}[-\s]?\d{4}/g,"[전화번호 가림]")
+    .replace(/[ \t]+\n/g,"\n").replace(/\n{3,}/g,"\n\n").trim();
+}
+async function pdfToText(file,onPage){
+  const lib=await loadPdfJs();
+  const task=lib.getDocument({data:await file.arrayBuffer()});
+  task.onPassword=(update,reason)=>{
+    const p=window.prompt(reason===2?"비밀번호가 맞지 않아요. 다시 입력해 주세요.":"이 PDF는 비밀번호가 걸려 있어요. 비밀번호를 입력해 주세요.");
+    if(p) update(p); else task.destroy();
+  };
+  const pdf=await task.promise;
+  const pages=[];
+  for(let p=1;p<=pdf.numPages;p++){
+    onPage&&onPage(p,pdf.numPages);
+    const tc=await (await pdf.getPage(p)).getTextContent();
+    let line="",lastY=null,endX=null;
+    const lines=[];
+    for(const it of tc.items){
+      if(typeof it.str!=="string") continue;
+      const x=it.transform[4],y=it.transform[5];
+      if(lastY!==null&&Math.abs(y-lastY)>3){if(line.trim())lines.push(line);line="";endX=null;}
+      else if(endX!==null&&x-endX>1.5&&line&&!/\s$/.test(line)&&it.str&&!/^\s/.test(it.str)) line+=" ";
+      line+=it.str;lastY=y;endX=x+(it.width||0);
+      if(it.hasEOL){if(line.trim())lines.push(line);line="";lastY=null;endX=null;}
+    }
+    if(line.trim()) lines.push(line);
+    pages.push(lines.join("\n"));
+  }
+  return {text:cleanPdfText(pages.join("\n\n")),pages:pdf.numPages};
+}
+async function handleFile(file){
+  if(!file) return;
+  if(!(file.type==="application/pdf"||/\.pdf$/i.test(file.name))){setStat("PDF 파일만 올릴 수 있어요.","err");return;}
+  if(file.size>40*1024*1024){setStat("파일이 너무 커요(40MB 이하). 쪽수를 줄여서 다시 올려 주세요.","err");return;}
+  setStat("PDF를 읽는 중이에요…");
+  try{
+    const {text,pages}=await pdfToText(file,(p,n)=>setStat(`PDF를 읽는 중이에요… (${p}/${n}쪽)`));
+    if(text.replace(/\s/g,"").length<50){
+      setStat("글자를 거의 읽지 못했어요. 사진이나 스캔으로 만든 PDF일 수 있어요. 나이스·정부24에서 내려받은 원본 PDF를 올리거나, 내용을 직접 붙여 넣어 주세요.","err");
+      return;
+    }
+    const body=stripCommon(text);
+    if(body.replace(/\s/g,"").length<20){setStat("인적사항·출결 같은 공통 부분만 있고 활동 기록을 찾지 못했어요. 창의적 체험활동이나 세부능력 및 특기사항이 들어 있는 PDF인지 확인해 주세요.","err");return;}
+    $("rec").value=body;
+    setStat(`${file.name} · ${pages}쪽을 읽었어요. 인적·학적사항, 출결, 수상경력, 자격증은 빼고 활동 기록 ${body.length.toLocaleString("ko-KR")}자를 분석해요.`,"ok");
+    refreshState();
+  }catch(e){
+    if(e&&e.message==="PDFJS_LOAD") setStat("PDF를 읽는 도구를 불러오지 못했어요. 인터넷 연결을 확인하거나, 생기부 내용을 아래에 직접 붙여 넣어 주세요.","err");
+    else if(e&&(e.name==="PasswordException"||/password/i.test(e.message||""))) setStat("비밀번호를 확인하지 못해서 열지 못했어요. 다시 올려 주세요.","err");
+    else setStat("이 PDF를 읽지 못했어요. 다른 파일이거나 손상됐을 수 있어요. 내용을 직접 붙여 넣어 주세요.","err");
+  }
+}
+$("pdf").addEventListener("change",e=>{handleFile(e.target.files[0]);e.target.value="";});
+["dragenter","dragover"].forEach(ev=>$("drop").addEventListener(ev,e=>{e.preventDefault();$("drop").classList.add("over");}));
+["dragleave","drop"].forEach(ev=>$("drop").addEventListener(ev,e=>{e.preventDefault();$("drop").classList.remove("over");}));
+$("drop").addEventListener("drop",e=>handleFile(e.dataTransfer&&e.dataTransfer.files[0]));
+window.addEventListener("dragover",e=>e.preventDefault());
+window.addEventListener("drop",e=>e.preventDefault());
+
+drawTracks();drawList();refreshState();
+</script>
+</body>
+</html>
