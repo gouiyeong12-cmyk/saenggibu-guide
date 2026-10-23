@@ -450,7 +450,7 @@ function guideSection(){
     <p class="foot" style="margin-top:8px">기록을 정리할 때는 <b>무엇을 · 왜 · 어떻게 · 그래서 무엇이 달라졌나</b> 네 가지가 드러나는지 점검해 보세요.</p>
   </section>`;
 }
-const DBT=[["학과","학과 이름으로 찾은 논문"],["수업","전공 수업으로 찾은 논문"],["주목","주목받는 주제로 찾은 논문"]];
+const DBT=[["학과,수업","전공 수업 관련 논문"],["주목","주목받는 주제로 찾은 논문"]];
 function dbCount(d){return (d.db||[]).reduce((s,g)=>s+g.T.length,0);}
 function dbItem(o){return `<li class="tp">${o.kw?`<span class="kw plain popkw">핵심 키워드 · ${esc(o.kw)}</span>`:""}<span class="tt">${esc(o.t)}</span>${howHtml(o)}<div class="refs paper" style="margin-left:0">출발 논문 <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=${encodeURIComponent(o.id)}" target="_blank" rel="noopener noreferrer">${esc(o.title)}</a> <span class="kwnote">(${esc(o.journal)}, ${esc(o.ym)} · 이용 ${Number(o.use).toLocaleString("ko-KR")}회)</span></div></li>`;}
 function dbSection(d){
@@ -458,12 +458,12 @@ function dbSection(d){
   return `<section class="panel core dbsec">
     <h3>DBpia 논문에서 출발한 주제</h3>
     <p class="sub">학과 이름·전공 수업·주목받는 주제로 DBpia를 검색해, 많이 읽힌 논문(이용순)과 최근 논문에서 <b>핵심 키워드 하나</b>만 가져와 고등학생이 직접 해 볼 수 있게 새로 만든 주제예요. 버튼을 누르면 주제와 출발 논문이 열려요.</p>
-    ${DBT.map(([ty,lab])=>{const gs=db.filter(g=>g.type===ty);if(!gs.length)return "";return `<div class="hot dbrow"><b class="xlab">${lab}</b><div>${gs.map(g=>`<button type="button" class="kw plain ktb" data-s="db" data-k="${esc(g.label)}" aria-expanded="false">${esc(g.label)}<small class="cnt">${g.T.length}</small></button>`).join("")}</div><div class="ktbox" hidden></div></div>`;}).join("")}
+    ${DBT.map(([ty,lab])=>{const gs=db.filter(g=>ty.split(",").includes(g.type));if(!gs.length)return "";return `<div class="hot dbrow"><b class="xlab">${lab}</b><div>${gs.map(g=>`<button type="button" class="kw plain ktb" data-s="db" data-k="${esc(g.label)}" aria-expanded="false">${esc(g.label)}<small class="cnt">${g.T.length}</small></button>`).join("")}</div><div class="ktbox" hidden></div></div>`;}).join("")}
   </section>`;
 }
 function dbLines(d,lines){
   const db=d.db||[];if(!db.length)return false;
-  DBT.forEach(([ty,lab])=>{db.filter(g=>g.type===ty).forEach(g=>{lines.push(`[${lab}: ${g.label}]`);g.T.forEach(o=>{lines.push(`- [${o.kw}] ${o.t}`);lines.push(`    탐구 방법: ${o.how}`);lines.push(`    이어가기: ${o.next}`);lines.push(`    출발 논문: ${o.title} (${o.journal}, ${o.ym}, 이용 ${o.use}회) https://www.dbpia.co.kr/journal/articleDetail?nodeId=${o.id}`);});});});
+  DBT.forEach(([ty,lab])=>{db.filter(g=>ty.split(",").includes(g.type)).forEach(g=>{lines.push(`[${lab}: ${g.label}]`);g.T.forEach(o=>{lines.push(`- [${o.kw}] ${o.t}`);lines.push(`    탐구 방법: ${o.how}`);lines.push(`    이어가기: ${o.next}`);lines.push(`    출발 논문: ${o.title} (${o.journal}, ${o.ym}, 이용 ${o.use}회) https://www.dbpia.co.kr/journal/articleDetail?nodeId=${o.id}`);});});});
   return true;
 }
 function popSection(d){
